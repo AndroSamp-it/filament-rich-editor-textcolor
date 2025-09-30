@@ -1,0 +1,22 @@
+{
+  "name": "custom-rich-editor-text-color",
+  "version": "1.0.0",
+  "description": "Custom Filament Rich Editor Text Color Plugin",
+  "main": "resources/js/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "node bin/build.js",
+    "dev": "node bin/build.js --dev",
+    "watch": "node bin/build.js --dev"
+  },
+  "keywords": ["filament", "rich-editor", "text-color"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@tiptap/extension-color": "^2.4.0",
+    "@tiptap/extension-text-style": "^2.4.0",
+    "esbuild": "^0.25.0"
+  }
+}
+
+

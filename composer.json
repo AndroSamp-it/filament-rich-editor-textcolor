@@ -1,0 +1,41 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "androsamp/filament-rich-editor-textcolor",
+    "description": "Filament Rich Editor text color plugin (TipTap) for FilamentPHP.",
+    "license": "MIT",
+    "keywords": [
+        "filament",
+        "filamentphp",
+        "rich-editor",
+        "tiptap",
+        "color",
+        "text-color",
+        "laravel",
+        "plugin"
+    ],
+    "require": {
+        "php": "^8.1",
+        "filament/forms": "^4.0",
+        "spatie/laravel-package-tools": "^1.15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Androsamp\\FilamentRichEditorTextColor\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Androsamp\\FilamentRichEditorTextColor\\FilamentRichEditorTextColorServiceProvider"
+            ]
+        }
+    },
+    "support": {
+        "issues": "https://github.com/AndroSamp-it/filament-rich-editor-textcolor/issues",
+        "source": "https://github.com/AndroSamp-it/filament-rich-editor-textcolor"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
+
+

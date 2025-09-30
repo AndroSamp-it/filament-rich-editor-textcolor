@@ -1,0 +1,25 @@
+
+.fi-fo-rich-editor .ProseMirror span[style*="color"] {
+}
+
+.fi-fo-rich-editor .ProseMirror strong,
+.fi-fo-rich-editor .ProseMirror em,
+.fi-fo-rich-editor .ProseMirror u,
+.fi-fo-rich-editor .ProseMirror b,
+.fi-fo-rich-editor .ProseMirror i,
+.fi-fo-rich-editor .ProseMirror mark {
+  color: inherit !important;
+}
+
+.tiptap-editor .ProseMirror strong,
+.tiptap-editor .ProseMirror em,
+.tiptap-editor .ProseMirror u,
+.tiptap-editor .ProseMirror b,
+.tiptap-editor .ProseMirror i,
+.tiptap-editor .ProseMirror mark {
+  color: inherit !important;
+}
+
+mark {
+  color: inherit;
+}
