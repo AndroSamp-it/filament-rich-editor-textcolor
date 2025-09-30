@@ -7,7 +7,7 @@ Plugin for Filament Rich Editor: text color selection (TipTap/ProseMirror).
 ## Installation
 
 ```bash
-composer require AndroSamp-it/filament-rich-editor-textcolor
+composer require androsamp/filament-rich-editor-textcolor
 ```
 
 ## Usage
