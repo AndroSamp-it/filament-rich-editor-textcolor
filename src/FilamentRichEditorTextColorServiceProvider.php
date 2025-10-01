@@ -25,7 +25,7 @@ class FilamentRichEditorTextColorServiceProvider extends ServiceProvider
 
         RichEditor::configureUsing(function (RichEditor $richEditor) {
             $richEditor->plugins([
-                TextColorRichContentPluginForEditor::make(),
+                TextColorRichContentPlugin::make(),
             ]);
         });
     }
