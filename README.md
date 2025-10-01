@@ -25,8 +25,19 @@ composer require androsamp/filament-rich-editor-textcolor
 For correct display after rendering:
 ```php
 use Androsamp\FilamentRichEditorTextColor\TextColorRichContentPlugin;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 
-$renderedHtml = TextColorRichContentPlugin::make()->postProcessHtml($renderedHtml);
+// Fetch the post and its content
+$post = Post::first();
+
+// Render the content using Filament's RichContentRenderer
+$renderer = RichContentRenderer::make($post->content);
+
+// Post-process the HTML to support text color styles
+$html = $renderer->toUnsafeHtml();
+$html = TextColorRichContentPlugin::make()->postProcessHtml($html);
+
+// $html now contains the final HTML with text color support
 ```
 
 ## License

@@ -3,6 +3,7 @@
 namespace Androsamp\FilamentRichEditorTextColor;
 
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,12 @@ class FilamentRichEditorTextColorServiceProvider extends ServiceProvider
 
         RichEditor::configureUsing(function (RichEditor $richEditor) {
             $richEditor->plugins([
+                TextColorRichContentPlugin::make(),
+            ]);
+        });
+
+        $this->app->resolving(RichContentRenderer::class, function (RichContentRenderer $renderer) {
+            $renderer->plugins([
                 TextColorRichContentPlugin::make(),
             ]);
         });
