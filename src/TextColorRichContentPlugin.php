@@ -148,13 +148,51 @@ class TextColorRichContentPlugin implements RichContentPlugin
             $parent->removeChild($el);
         };
 
-        // 1) Move color from <span style="color:..."></span> to nested <mark>, then unwrap such <span>
-        $spans = $xpath->query('//span[contains(translate(@style, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "color:")]');
+        // Helper: find the innermost element that actually contains non-empty text
+        $findInnermostContainingText = null;
+        $findInnermostContainingText = function (\DOMElement $el) use (&$findInnermostContainingText) {
+            // If this element directly has a non-empty text node, return it
+            foreach ($el->childNodes as $child) {
+                if ($child instanceof \DOMText && trim($child->nodeValue) !== '') {
+                    return $el;
+                }
+            }
+
+            // Otherwise, recurse into element children and return the first matching descendant
+            foreach ($el->childNodes as $child) {
+                if ($child instanceof \DOMElement) {
+                    $found = $findInnermostContainingText($child);
+                    if ($found) {
+                        return $found;
+                    }
+                }
+            }
+
+            return null;
+        };
+
+        // 1) Move color from <span ...> (including data-color / --color vars) to nested <mark>,
+        //    and also apply color to the innermost element that contains the text
+        $spans = $xpath->query('//span[(@data-color) or contains(translate(@style, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "color:") or contains(translate(@style, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "--color")]');
         $spansToUnwrap = [];
         /** @var \DOMElement $span */
         foreach ($spans as $span) {
             $styles = $parseStyle($span->getAttribute('style'));
             $color = $styles['color'] ?? null;
+
+            // support --color CSS variable
+            if (! $color && isset($styles['--color'])) {
+                $color = $styles['--color'];
+            }
+
+            // support data-color attribute
+            if (! $color) {
+                $attrColor = $span->getAttribute('data-color');
+                if ($attrColor !== '') {
+                    $color = $attrColor;
+                }
+            }
+
             if (! $color) {
                 continue;
             }
@@ -163,14 +201,36 @@ class TextColorRichContentPlugin implements RichContentPlugin
             $updatedAny = false;
             /** @var \DOMElement $mark */
             foreach ($marks as $mark) {
+                // Apply color to the mark itself
                 $markStyles = $parseStyle($mark->getAttribute('style'));
-                $markStyles['color'] = $color; // apply text color to mark
+                $markStyles['color'] = $color;
                 $mark->setAttribute('style', $styleToString($markStyles));
+
+                // Apply color to all ancestor inline elements up to the enclosing span
+                /** @var \DOMNode|null $parent */
+                $parent = $mark->parentNode;
+                while ($parent instanceof \DOMElement && $parent !== $span) {
+                    /** @var \DOMElement $parentElement */
+                    $parentElement = $parent;
+                    $parentStyles = $parseStyle($parentElement->getAttribute('style'));
+                    $parentStyles['color'] = $color;
+                    $parentElement->setAttribute('style', $styleToString($parentStyles));
+                    $parent = $parentElement->parentNode;
+                }
+
+                // As a fallback, also ensure the innermost element containing text has the color
+                $innermost = $findInnermostContainingText($mark);
+                if ($innermost instanceof \DOMElement) {
+                    $innermostStyles = $parseStyle($innermost->getAttribute('style'));
+                    $innermostStyles['color'] = $color;
+                    $innermost->setAttribute('style', $styleToString($innermostStyles));
+                }
+
                 $updatedAny = true;
             }
 
             if ($updatedAny) {
-                // Keep color on both span and mark
+                // Keep color on both span and mark/innermost element
             }
         }
         // Don't unwrap outer <span> to preserve its styles
