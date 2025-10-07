@@ -13,12 +13,12 @@ composer require androsamp/filament-rich-editor-textcolor
 ## Usage
 
 ```php
-->toolbarButtons(['textColor'])
+->toolbarButtons(['textColorPicker'])
 ```
 ```php
 ->floatingToolbars([
     'paragraph' => [
-        'textColor'
+        'textColorPicker'
     ]
 ])
 ```
@@ -39,6 +39,32 @@ $html = TextColorRichContentPlugin::make()->postProcessHtml($html);
 
 // $html now contains the final HTML with text color support
 ```
+
+## Localization
+
+The package includes translations for English and Russian languages. The translations are automatically loaded when the package is installed.
+
+### Available Translation Keys
+
+```php
+'filament-rich-editor-textcolor::text-color.label' // Button label
+'filament-rich-editor-textcolor::text-color.modal_heading' // Modal heading
+```
+
+### Publishing Translations
+
+To customize the translations, you can publish them to your project:
+
+```bash
+php artisan vendor:publish --tag=filament-rich-editor-textcolor-translations
+```
+
+This will copy the translation files to `resources/lang/vendor/filament-rich-editor-textcolor/`.
+
+### Supported Languages
+
+- **English** (`en`) - Default
+- **Russian** (`ru`)
 
 ## License
 

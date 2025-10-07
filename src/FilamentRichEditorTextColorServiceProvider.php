@@ -17,7 +17,11 @@ class FilamentRichEditorTextColorServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'custom-rich-editor-text-color');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-rich-editor-textcolor');
+
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/filament-rich-editor-textcolor'),
+        ], 'filament-rich-editor-textcolor-translations');
 
         FilamentAsset::register([
             Js::make('rich-content-plugins/text-color', __DIR__ . '/../resources/dist/filament/rich-content-plugins/text-color.js')->loadedOnRequest(),

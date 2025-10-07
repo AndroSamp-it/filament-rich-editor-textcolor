@@ -9,8 +9,6 @@ use Filament\Forms\Components\RichEditor\EditorCommand;
 use Filament\Forms\Components\RichEditor\Plugins\Contracts\RichContentPlugin;
 use Filament\Forms\Components\RichEditor\RichEditorTool;
 use Filament\Support\Facades\FilamentAsset;
-use Tiptap\Extensions\Color as PhpColor;
-use Tiptap\Marks\TextStyle as PhpTextStyle;
 
 class TextColorRichContentPlugin implements RichContentPlugin
 {
@@ -39,10 +37,7 @@ class TextColorRichContentPlugin implements RichContentPlugin
      */
     public function getTipTapPhpExtensions(): array
     {
-        return [
-            app(PhpTextStyle::class),
-            app(PhpColor::class),
-        ];
+        return [];
     }
 
     /**
@@ -51,10 +46,10 @@ class TextColorRichContentPlugin implements RichContentPlugin
     public function getEditorTools(): array
     {
         return [
-            RichEditorTool::make('textColor')
-                ->label(__('custom-rich-editor-text-color::text-color.label'))
+            RichEditorTool::make('textColorPicker')
+                ->label(__('filament-rich-editor-textcolor::text-color.label'))
                 ->icon('heroicon-o-paint-brush')
-                ->action(arguments: '{ color: $getEditor()?.getAttributes(\'textStyle\')?.[\'color\'] }'),
+                ->action(arguments: '{ color: $getEditor()?.getAttributes(\'textColor\')?.[\'data-color\'] ?? null }'),
         ];
     }
 
@@ -64,9 +59,9 @@ class TextColorRichContentPlugin implements RichContentPlugin
     public function getEditorActions(): array
     {
         return [
-            Action::make('textColor')
+            Action::make('textColorPicker')
                 ->modalWidth('lg')
-                ->modalHeading(__('custom-rich-editor-text-color::text-color.modal_heading'))
+                ->modalHeading(__('filament-rich-editor-textcolor::text-color.modal_heading'))
                 ->fillForm(fn (array $arguments): array => [
                     'color' => $arguments['color'] ?? null,
                 ])
@@ -76,7 +71,9 @@ class TextColorRichContentPlugin implements RichContentPlugin
                 ->action(function (array $arguments, array $data, RichEditor $component): void {
                     $component->runCommands(
                         [
-                            EditorCommand::make('setColor', arguments: [$data['color'] ?? null]),
+                            EditorCommand::make('setTextColor', arguments: [[
+                                'color' => $data['color'] ?? null,
+                            ]]),
                         ],
                         editorSelection: $arguments['editorSelection'] ?? null,
                     );
